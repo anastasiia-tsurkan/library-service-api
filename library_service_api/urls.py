@@ -21,5 +21,6 @@ import books
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("api/library/", include("books.urls", namespace="books"))
+    path("api/library/", include("books.urls", namespace="books")),
+    path("api/library/", include("borrowings.urls", namespace="borrowings")),
 ]

@@ -9,9 +9,12 @@ class Book(models.Model):
     title = models.CharField(max_length=255)
     author = models.CharField(max_length=255)
     cover = models.CharField(max_length=50, choises=CoverChoices.choices)
-    amount = models.IntegerField()
+    inventory = models.PositiveIntegerField()
     daily_fee = models.DecimalField(max_digits=5, decimal_places=2)
 
     @property
-    def inventory(self):
-        return self.amount
+    def out_of_books(self):
+        return self.inventory == 0
+
+    def __str__(self):
+        return self.title

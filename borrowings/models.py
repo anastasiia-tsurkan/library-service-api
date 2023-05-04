@@ -2,7 +2,6 @@ from django.contrib.auth import get_user_model
 from django.db import models
 
 from books.models import Book
-from users.models import User
 
 
 class Borrowing(models.Model):

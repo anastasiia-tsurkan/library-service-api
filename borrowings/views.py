@@ -9,7 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from borrowings.models import Borrowing
-from borrowings.serializers import BorrowingSerializer, BorrowingListSerializer, BorrowingDetailSerializer
+from borrowings.serializers import BorrowingSerializer, BorrowingListSerializer, BorrowingDetailSerializer, BorrowingReturnSerializer
 
 
 class BorrowingViewSet(
@@ -45,6 +45,8 @@ class BorrowingViewSet(
             return BorrowingListSerializer
         if self.action == "retrieve":
             return BorrowingDetailSerializer
+        if self.action == "return_borrowing":
+            return BorrowingReturnSerializer
         return BorrowingSerializer
 
     @transaction.atomic()

@@ -25,7 +25,7 @@ class BorrowingSerializer(serializers.ModelSerializer):
 
 
 class BorrowingListSerializer(BorrowingSerializer):
-    book = BookSerializer
+    book = serializers.CharField(source="book.title")
     user = serializers.CharField(source="user.email")
 
     class Meta:
@@ -34,6 +34,8 @@ class BorrowingListSerializer(BorrowingSerializer):
 
 
 class BorrowingDetailSerializer(BorrowingSerializer):
+    book = serializers.CharField(source="book.title")
+
     class Meta:
         model = Borrowing
         fields = "__all__"

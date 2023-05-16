@@ -37,3 +37,9 @@ class BorrowingDetailSerializer(BorrowingSerializer):
     class Meta:
         model = Borrowing
         fields = "__all__"
+
+
+class BorrowingReturnSerializer(BorrowingSerializer):
+    class Meta:
+        model = Borrowing
+        fields = ()

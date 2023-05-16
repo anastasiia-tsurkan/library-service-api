@@ -9,15 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from borrowings.models import Borrowing
-from borrowings.serializers import BorrowingSerializer, BorrowingListSerializer
-
-
-# class BorrowingListView(
-#     viewsets.ModelViewSet
-# ):
-#     serializer_class = BorrowingSerializer
-#     permission_classes = ("IsAdmin",)
-#     queryset = Borrowing.objects.select_related("user", "book")
+from borrowings.serializers import BorrowingSerializer, BorrowingListSerializer, BorrowingDetailSerializer
 
 
 class BorrowingViewSet(
@@ -43,7 +35,6 @@ class BorrowingViewSet(
             queryset = self.queryset.filter(actual_return__isnull=True)
         if is_active is False:
             queryset = self.queryset.filter(actual_return__isnull=False)
-
         if user.is_staff:
             return queryset
 
@@ -52,6 +43,8 @@ class BorrowingViewSet(
     def get_serializer_class(self):
         if self.action == "list":
             return BorrowingListSerializer
+        if self.action == "retrieve":
+            return BorrowingDetailSerializer
         return BorrowingSerializer
 
     @transaction.atomic()

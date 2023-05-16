@@ -10,7 +10,7 @@ class BorrowingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Borrowing
-        fields = ["id", "borrow_date", "expected_return", "actual_return", "book", "user"]
+        fields = ("id", "borrow_date", "expected_return", "book")
 
     @transaction.atomic
     def create(self, validated_data):
@@ -28,6 +28,12 @@ class BorrowingListSerializer(BorrowingSerializer):
     book = BookSerializer
     user = serializers.CharField(source="user.email")
 
+    class Meta:
+        model = Borrowing
+        fields = ("id", "borrow_date", "expected_return", "actual_return", "book", "user")
+
+
+class BorrowingDetailSerializer(BorrowingSerializer):
     class Meta:
         model = Borrowing
         fields = "__all__"

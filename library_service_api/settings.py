@@ -13,6 +13,11 @@ import os
 from datetime import timedelta
 from pathlib import Path
 
+from celery.schedules import crontab
+from dotenv import load_dotenv
+
+load_dotenv()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -21,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-8xnb$661^v3_=g2e#okn=jggq0z*fz%!flxy)&mydkq$947e-4"
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -40,6 +45,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "drf_spectacular",
+    "django_celery_beat",
     "users",
     "books",
     "borrowings",
@@ -79,10 +85,14 @@ WSGI_APPLICATION = "library_service_api.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        "HOST": os.environ["POSTGRES_HOST"],
+        "NAME": os.environ["POSTGRES_DB"],
+        "USER": os.environ["POSTGRES_USER"],
+        "PASSWORD": os.environ["POSTGRES_PASSWORD"],
     }
 }
 
@@ -149,4 +159,20 @@ SPECTACULAR_SETTINGS = {
     "DESCRIPTION": "User friendly online service to borrow books",
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
+}
+
+TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
+
+CELERY_BROKER_URL = "redis://redis:6379"
+CELERY_RESULT_URL = "redis://redis:6379"
+CELERY_TIMEZONE = "Europe/Kiev"
+CELERY_IMPORTS = [
+    "borrowings.tasks",
+]
+CELERY_BEAT_SCHEDULE = {
+    "send_msg_about_overdue_borrowings": {
+        "task": "borrowings.tasks.send_msg_about_overdue_borrowings",
+        "schedule": crontab(minute=1)  # (minute=0, hour=9),
+    },
 }

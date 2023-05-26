@@ -15,7 +15,10 @@ BORROWING_URL = reverse("borrowings:borrowing-list")
 
 
 def return_url(borrowing_id):
-    return reverse("borrowings:borrowing-return-borrowing", args=[borrowing_id])
+    return reverse(
+        "borrowings:borrowing-return-borrowing",
+        args=[borrowing_id]
+    )
 
 
 def sample_user(email: str, **params):
@@ -105,7 +108,10 @@ class AuthenticatedBorrowingTests(TestCase):
         user_borrowing.refresh_from_db()
         self.assertIsNotNone(user_borrowing.actual_return)
         self.assertEqual(inventory_after, inventory_before)
-        self.assertEqual(res.data, {"status": "This borrowing is closed successfully"})
+        self.assertEqual(
+            res.data,
+            {"status": "This borrowing is closed successfully"}
+        )
 
     def test_return_borrowing_twice_forbidden(self):
         borrowing = sample_borrowing(user=self.user, book=sample_book())
@@ -140,14 +146,24 @@ class AdminBorrowingTests(TestCase):
         user1 = sample_user(email="user1@test.com")
 
         sample_borrowing(user=user1, book=book1)
-        borrowings_active = Borrowing.objects.filter(actual_return__isnull=True)
-        serializer_active = BorrowingListSerializer(borrowings_active, many=True)
+        borrowings_active = Borrowing.objects.filter(
+            actual_return__isnull=True
+        )
+        serializer_active = BorrowingListSerializer(
+            borrowings_active,
+            many=True
+        )
 
         borrowing_not_active = sample_borrowing(user=user1, book=book1)
         borrowing_not_active.actual_return = date(2024, 1, 1)
         borrowing_not_active.save()
-        borrowings_not_active = Borrowing.objects.filter(actual_return__isnull=False)
-        serializer_not_active = BorrowingListSerializer(borrowings_not_active, many=True)
+        borrowings_not_active = Borrowing.objects.filter(
+            actual_return__isnull=False
+        )
+        serializer_not_active = BorrowingListSerializer(
+            borrowings_not_active,
+            many=True
+        )
 
         url_active = BORROWING_URL + "?is_active=true"
         url_not_active = BORROWING_URL + "?is_active=false"

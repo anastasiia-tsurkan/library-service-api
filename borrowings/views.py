@@ -52,7 +52,12 @@ class BorrowingViewSet(
         return BorrowingSerializer
 
     @transaction.atomic()
-    @action(methods=["POST"], detail=True, url_path="return", serializer_class=None)
+    @action(
+        methods=["POST"],
+        detail=True,
+        url_path="return",
+        serializer_class=None
+    )
     def return_borrowing(self, request, pk):
         borrowing = self.get_object()
         if borrowing.actual_return is not None:

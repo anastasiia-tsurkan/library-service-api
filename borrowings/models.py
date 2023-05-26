@@ -12,4 +12,6 @@ class Borrowing(models.Model):
     user = models.ForeignKey(get_user_model(), on_delete=models.PROTECT)
 
     def __str__(self):
-        return f"{self.user.email}: {self.book.title} -> {self.expected_return}"
+        return(f"{self.user.email}: {self.book.title} -> "
+               f"{self.expected_return}"
+               )

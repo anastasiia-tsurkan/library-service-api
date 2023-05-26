@@ -1,5 +1,3 @@
-import datetime
-
 from django.db import transaction
 from django.utils import timezone
 from drf_spectacular.utils import extend_schema, OpenApiParameter
@@ -9,7 +7,12 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from borrowings.models import Borrowing
-from borrowings.serializers import BorrowingSerializer, BorrowingListSerializer, BorrowingDetailSerializer, BorrowingReturnSerializer
+from borrowings.serializers import (
+    BorrowingSerializer,
+    BorrowingListSerializer,
+    BorrowingDetailSerializer,
+    BorrowingReturnSerializer,
+)
 
 
 class BorrowingViewSet(
@@ -24,7 +27,6 @@ class BorrowingViewSet(
 
     def get_queryset(self):
         user = self.request.user
-        queryset = self.queryset
         user_id = self.request.query_params.get("user_id")
         is_active = self.request.query_params.get("is_active")
 

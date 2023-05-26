@@ -12,9 +12,5 @@ class Book(models.Model):
     inventory = models.PositiveIntegerField()
     daily_fee = models.DecimalField(max_digits=5, decimal_places=2)
 
-    @property
-    def out_of_books(self):
-        return self.inventory == 0
-
     def __str__(self):
         return self.title
